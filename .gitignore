@@ -19,3 +19,5 @@ pom.xml.asc
 .cpcache/
 
 # End of https://www.toptal.com/developers/gitignore/api/clojure
+
+pgdata

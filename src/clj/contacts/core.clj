@@ -18,7 +18,7 @@
                   {:status 200
                    :body "it works!"})}]
      ["/api"
-      ["/ping" {:name ::ping
+      ["/ping" {:name :ping
                 :get (fn [{:keys [body-params]}]
                        (pprint body-params)
                        {:status 200
@@ -41,7 +41,3 @@
 (defn restart-server []
   (stop-server)
   (-main))
-
-(comment
-  (stop-server)
-  (restart-server))

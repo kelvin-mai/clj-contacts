@@ -1,5 +1,7 @@
-{:paths ["src/clj"]
+{:paths ["src/clj" "resources"]
  :deps {org.clojure/clojure {:mvn/version "1.10.1"}
         metosin/reitit {:mvn/version "0.5.2"}
-        http-kit {:mvn/version "2.3.0"}}
+        http-kit {:mvn/version "2.3.0"}
+        org.postgresql/postgresql {:mvn/version "42.2.2"}
+        com.layerware/hugsql {:mvn/version "0.5.1"}}
  :aliases {:run {:main-opts ["-m" "contacts.core"]}}}
