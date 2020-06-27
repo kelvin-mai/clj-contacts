@@ -13,11 +13,11 @@ CREATE TABLE contacts (
 -- :name get-contacts :? :*
 SELECT * FROM contacts;
 
--- :name get-contact-by-id :? :*
+-- :name get-contact-by-id :? :1
 SELECT * FROM contacts
 WHERE id = :id;
 
--- :name insert-contact :insert :*
+-- :name insert-contact :? :1
 INSERT INTO contacts (first_name, last_name, email)
 VALUES (:first-name, :last-name, :email)
 RETURNING id;
