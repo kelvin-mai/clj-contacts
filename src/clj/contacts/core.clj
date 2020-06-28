@@ -1,6 +1,5 @@
 (ns contacts.core
   (:require [org.httpkit.server :refer [run-server]]
-            [reitit.core :as r]
             [reitit.ring :as ring]
             [reitit.ring.middleware.exception :refer [exception-middleware]]
             [reitit.ring.middleware.parameters :refer [parameters-middleware]]
@@ -11,37 +10,10 @@
                                           coerce-request-middleware
                                           coerce-response-middleware]]
             [reitit.coercion.schema]
-            [schema.core :as s]
             [muuntaja.core :as m]
-            [contacts.contacts :refer [get-contacts
-                                       create-contact
-                                       get-contact-by-id
-                                       update-contact
-                                       delete-contact]]))
+            [contacts.routes :refer [ping-routes contact-routes]]))
 
 (defonce server (atom nil))
-
-(def ping-routes
-  ["/ping" {:name :ping
-            :get (fn [_]
-                   {:status 200
-                    :body {:ping "pong"}})}])
-
-(def contact-routes
-  ["/contacts"
-   ["/" {:get get-contacts
-         :post {:parameters {:body {:first-name s/Str
-                                    :last-name s/Str
-                                    :email s/Str}}
-                :handler create-contact}}]
-   ["/:id" {:coercion reitit.coercion.schema/coercion
-            :parameters {:path {:id s/Int}}
-            :get get-contact-by-id
-            :put {:parameters {:body {:first-name s/Str
-                                      :last-name s/Str
-                                      :email s/Str}}
-                  :handler update-contact}
-            :delete delete-contact}]])
 
 (def app
   (ring/ring-handler
@@ -63,7 +35,9 @@
                          coerce-request-middleware
                          coerce-response-middleware]}})
    (ring/routes
-    (ring/create-default-handler))))
+    (ring/redirect-trailing-slash-handler)
+    (ring/create-default-handler
+     {:not-found (constantly {:status 404 :body "Route not found"})}))))
 
 (defn stop-server []
   (when-not (nil? @server)
@@ -79,12 +53,13 @@
   (-main))
 
 (comment
-  contacts/routes
   (app {:request-method :get
-        :uri "/api/contacts/"})
+        :uri "/api/invalid"})
+  (app {:request-method :get
+        :uri "/api/contacts"})
   (app {:request-method :delete
         :uri "/api/contacts/1"})
-  (app {:request-method :put
-        :uri "/api/contacts/3"
-        :body "{\"first-name\":\"Bob\",\"last-name\":\"Dole\",\"email\":\"bob.dole@gmail.com\"}"})
+  (app {:request-method :post
+        :uri "/api/contacts/"
+        :body "{\"first-name\":\"Kelvin\",\"last-name\":\"Mai\",\"email\":\"kelvin.mai002@gmail.com\"}"})
   (restart-server))
