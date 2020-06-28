@@ -3,7 +3,6 @@
 
 (defn get-contacts
   [_]
-  (println "Changed again")
   {:status 200
    :body (db/get-contacts db/db)})
 
@@ -50,5 +49,3 @@
       {:status 404
        :body {:deleted false
               :error "Unable to delete contact"}})))
-
-(println "hello")

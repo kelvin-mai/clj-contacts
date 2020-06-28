@@ -21,3 +21,6 @@ pom.xml.asc
 # End of https://www.toptal.com/developers/gitignore/api/clojure
 
 pgdata
+node_modules
+.shadow-cljs
+resources/public/js

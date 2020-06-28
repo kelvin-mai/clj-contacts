@@ -1,0 +1,10 @@
+{:source-paths ["src/cljs"]
+ :nrepl {:port 9000}
+ :dependencies [[cider/cider-nrepl "0.21.0"]
+                [cljs-ajax "0.8.0"]]
+ :dev-http {4200 "resources/public"}
+ :builds {:contacts {:target :browser
+                     :output-dir "resources/public/js"
+                     :asset-path "/js"
+                     :modules {:main {:entries [contacts.core]}}
+                     :devtools {:after-load contacts.core/init}}}}

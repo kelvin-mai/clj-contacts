@@ -1,0 +1,16 @@
+{
+  "name": "clj-contacts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/kelvin-mai/clj-contacts.git",
+  "author": "Kelvin Mai <kelvin.mai002@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "shadow-cljs watch contacts"
+  },
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "shadow-cljs": "^2.10.13"
+  }
+}
