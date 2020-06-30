@@ -1,0 +1,3 @@
+{:lint-as {helix.core/defnc clojure.core/defnc}
+ :linters {:unresolved-symbol {:exclude [(hx.react/defnc)
+                                         (hx.react/f)]}}}
