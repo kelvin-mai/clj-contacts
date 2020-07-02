@@ -2,7 +2,7 @@
  :nrepl {:port 9000}
  :dependencies [[cider/cider-nrepl "0.21.0"]
                 [cljs-ajax "0.8.0"]
-                [lilactown/hx "0.5.3"]]
+                [lilactown/helix "0.0.12"]]
  :dev-http {4200 "resources/public"}
  :builds {:contacts {:target :browser
                      :compiler-options {:output-feature-set :es6}

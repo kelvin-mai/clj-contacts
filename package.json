@@ -6,8 +6,8 @@
   "author": "Kelvin Mai <kelvin.mai002@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "yarn tailwind-css && shadow-cljs watch contacts",
-    "tailwind-css": "tailwind build src/cljs/core.css -o resources/public/css/main.css"
+    "start": "yarn build-styles && shadow-cljs watch contacts",
+    "build-styles": "tailwind build src/cljs/tailwind.css -o resources/public/css/main.css"
   },
   "dependencies": {
     "react": "^16.13.1",
