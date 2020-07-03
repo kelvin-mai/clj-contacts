@@ -3,10 +3,10 @@
  :dependencies [[cider/cider-nrepl "0.21.0"]
                 [cljs-ajax "0.8.0"]
                 [lilactown/helix "0.0.12"]]
- :dev-http {4200 "resources/public"}
  :builds {:contacts {:target :browser
                      :compiler-options {:output-feature-set :es6}
                      :output-dir "resources/public/js"
                      :asset-path "/js"
-                     :modules {:main {:entries [contacts.core]}}
-                     :devtools {:after-load contacts.core/init}}}}
+                     :modules {:main {:init-fn contacts.core/init}}
+                     :devtools {:http-root "resources/public"
+                                :http-port 4200}}}}
