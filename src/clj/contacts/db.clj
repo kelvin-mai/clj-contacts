@@ -1,7 +1,7 @@
 (ns contacts.db
   (:require [hugsql.core :as hugsql]))
 
-(def db
+(def config
   {:classname "org.postgresql.Driver"
    :subprotocol "postgresql"
    :subname "//localhost:5432/clj_contacts"

@@ -19,10 +19,7 @@
 (def app
   (ring/ring-handler
    (ring/router
-    [["/" {:get (fn [_]
-                  {:status 200
-                   :body {:hello "world"}})}]
-     ["/api"
+    [["/api"
       ping-routes
       contact-routes]]
     {:data {:coercion reitit.coercion.schema/coercion
