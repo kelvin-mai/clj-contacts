@@ -1,28 +1,9 @@
-(ns contacts.components
+(ns contacts.components.contact-form
   (:require [helix.core :refer [defnc $ <>]]
             [helix.dom :as d]
             [helix.hooks :as hooks]
             [contacts.utils :refer [make-label-str
                                     contact-form-fields]]))
-
-(defnc nav []
-  (d/nav {:class '[py-4 shadow]}
-         (d/div {:class '[container]}
-                (d/h2 {:class '[text-xl]} "Contact Book"))))
-
-(defnc contact-list-item [{:keys [contact]}]
-  (d/li
-   (d/div
-    (d/p (str (:first_name contact) " " (:last_name contact))))))
-
-(defnc contact-list [{:keys [contacts]}]
-  (<>
-   (d/h3 "Contacts")
-   (d/ul
-    (map-indexed (fn [i contact]
-                   ($ contact-list-item {:contact contact
-                                         :key i}))
-                 contacts))))
 
 (defnc contact-display-item [{:keys [label value]}]
   (d/p
@@ -64,7 +45,7 @@
                                                       -value)))}))
       contact-form-fields))))
 
-(defnc contact [{:keys [contact]}]
+(defnc contact-form [{:keys [contact]}]
   (let [[edit set-edit] (hooks/use-state false)]
     (d/div
      (d/h1 "Contact")

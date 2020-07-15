@@ -4,7 +4,9 @@
             [helix.dom :as d]
             [helix.hooks :as hooks]
             ["react-dom" :as dom]
-            [contacts.components :refer [nav contact contact-list]]))
+            [contacts.components.nav :refer [nav]]
+            [contacts.components.contact-form :refer [contact-form]]
+            [contacts.components.contact-list :refer [contact-list]]))
 
 (defnc app []
   (let [[contacts set-contacts] (hooks/use-state nil)]
@@ -17,7 +19,7 @@
        ($ nav)
        (d/div {:class '[container pt-4]}
               ($ contact-list {:contacts contacts})
-              ($ contact {:contact (first contacts)})))
+              ($ contact-form {:contact (first contacts)})))
       (d/p "Loading..."))))
 
 (defn ^:export init []
@@ -28,4 +30,5 @@
     {:handler (fn [response]
                 (.log js/console response))})
   (init)
+  (println "hello")
   ())
