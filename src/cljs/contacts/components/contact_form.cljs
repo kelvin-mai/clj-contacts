@@ -2,6 +2,7 @@
   (:require [helix.core :refer [defnc $ <>]]
             [helix.dom :as d]
             [helix.hooks :as hooks]
+            [contacts.state :refer [use-contacts-state]]
             [contacts.utils :refer [make-label-str
                                     contact-form-fields]]))
 
@@ -30,7 +31,6 @@
 
 (defnc contact-edit [{:keys [contact]}]
   (let [[state set-state] (hooks/use-state contact)]
-    (prn state)
     (d/form
      (map-indexed
       (fn [i v]
@@ -46,7 +46,9 @@
       contact-form-fields))))
 
 (defnc contact-form [{:keys [contact]}]
-  (let [[edit set-edit] (hooks/use-state false)]
+  (let [[edit set-edit] (hooks/use-state false)
+        [state dispatch] (use-contacts-state)]
+    (println state dispatch)
     (d/div
      (d/h1 "Contact")
      (d/button {:on-click #(set-edit (not edit))}
