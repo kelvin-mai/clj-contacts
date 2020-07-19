@@ -4,30 +4,33 @@
             [helix.dom :as d]
             [helix.hooks :as hooks]
             ["react-dom" :as dom]
-            [contacts.state :refer [contacts-state contact-reducer]]
+            [contacts.state :refer [app-state app-reducer initial-state use-app-state]]
             [contacts.components.nav :refer [nav]]
             [contacts.components.contact-form :refer [contact-form]]
             [contacts.components.contact-list :refer [contact-list]]))
 
 (defnc app []
-  (let [[contacts set-contacts] (hooks/use-state nil)]
+  (let [[state actions] (use-app-state)]
     (hooks/use-effect
      :once
      (GET "http://localhost:4000/api/contacts"
-       {:handler #(set-contacts %)}))
-    (provider {:context contacts-state
-               :value (hooks/use-reducer contact-reducer 0)}
-              (if contacts
-                (<>
-                 ($ nav)
-                 (d/div {:class '[container pt-4]}
-                        ($ contact-list {:contacts contacts})
-                        ($ contact-form {:contact (first contacts)})))
-                (d/p "Loading...")))))
+       {:handler (:init actions)}))
+    (if (:contacts state)
+      (<>
+       ($ nav)
+       (d/div {:class '[container pt-4]}
+              ($ contact-list)
+              ($ contact-form)))
+      (d/p "Loading..."))))
+
+(defnc provided-app []
+  (provider {:context app-state
+             :value (hooks/use-reducer app-reducer initial-state)}
+            ($ app)))
 
 (defn ^:export init []
   (dom/render
-   ($ app)
+   ($ provided-app)
    (js/document.getElementById "app")))
 
 (comment

@@ -2,22 +2,22 @@
   (:require [helix.core :refer [defnc $ <>]]
             [helix.dom :as d]
             [helix.hooks :as hooks]
-            [contacts.state :refer [use-contacts-state]]
+            [contacts.state :refer [use-app-state]]
             [contacts.utils :refer [make-label-str
                                     contact-form-fields]]))
 
 (defnc contact-display-item [{:keys [label value]}]
   (d/p
    (d/strong
-    (make-label-str label)
-    value)))
+    (make-label-str label))
+   value))
 
 (defnc contact-display [{:keys [contact]}]
   (<>
    (map-indexed
     (fn [i v]
       ($ contact-display-item {:label v
-                               :value (get  contact (keyword v))
+                               :value (get contact (keyword v))
                                :key i}))
     contact-form-fields)))
 
@@ -45,10 +45,10 @@
                                                       -value)))}))
       contact-form-fields))))
 
-(defnc contact-form [{:keys [contact]}]
+(defnc contact-form []
   (let [[edit set-edit] (hooks/use-state false)
-        [state dispatch] (use-contacts-state)]
-    (println state dispatch)
+        [state _] (use-app-state)
+        selected (:selected state)]
     (d/div
      (d/h1 "Contact")
      (d/button {:on-click #(set-edit (not edit))}
@@ -56,5 +56,5 @@
                  "Cancel"
                  "Edit contact"))
      (if edit
-       ($ contact-display {:contact contact})
-       ($ contact-edit {:contact contact})))))
+       ($ contact-edit {:contact selected})
+       ($ contact-display {:contact selected})))))
