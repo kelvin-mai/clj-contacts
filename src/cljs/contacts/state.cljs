@@ -41,5 +41,7 @@
 (defn use-app-state []
   (let [[state dispatch] (hooks/use-context app-state)]
     [state {:init (fn [response]
-                    (dispatch [:set-selected (first response)])
-                    (dispatch [:set-contacts response]))}]))
+                    (dispatch [:set-contacts response])
+                    (dispatch [:set-selected (first response)]))
+            :select #(dispatch [:set-selected %])
+            :new-contact #(dispatch [:set-selected nil])}]))

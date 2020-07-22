@@ -6,6 +6,6 @@
 
 (defn make-label-str [s]
   (str (-> s
-           (replace "-" " ")
+           (replace "_" " ")
            capitalize)
        ": "))

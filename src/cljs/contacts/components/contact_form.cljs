@@ -23,38 +23,49 @@
 
 (defnc contact-edit-item [{:keys [label value on-change]}]
   (d/div
-   (d/label {:for label}
+   (d/label {:for label
+             :class '[font-bold]}
             (make-label-str label))
    (d/input {:id label
+             :class '[shadow border rounded w-full py-2 px-3 mb-3]
              :value value
              :on-change on-change})))
 
 (defnc contact-edit [{:keys [contact]}]
   (let [[state set-state] (hooks/use-state contact)]
-    (d/form
-     (map-indexed
-      (fn [i v]
-        ($ contact-edit-item {:label v
-                              :value (get state (keyword v))
-                              :key i
-                              :on-change #(set-state
-                                           (assoc state
-                                                  (keyword v)
-                                                  (.. %
-                                                      -target
-                                                      -value)))}))
-      contact-form-fields))))
+    (d/form {:on-submit (fn [e]
+                          (.preventDefault e))}
+            (map-indexed
+             (fn [i v]
+               ($ contact-edit-item {:label v
+                                     :value (get state (keyword v))
+                                     :key i
+                                     :on-change #(set-state
+                                                  (assoc state
+                                                         (keyword v)
+                                                         (.. %
+                                                             -target
+                                                             -value)))}))
+             contact-form-fields)
+            (d/button {:type "submit"
+                       :class '[bg-teal-500 py-2 px-4 w-full text-white]}
+                      "Submit"))))
 
 (defnc contact-form []
   (let [[edit set-edit] (hooks/use-state false)
-        [state _] (use-app-state)
-        selected (:selected state)]
+        [state actions] (use-app-state)
+        selected (:selected state)
+        new-contact (:new-contact actions)]
     (d/div
-     (d/h1 "Contact")
-     (d/button {:on-click #(set-edit (not edit))}
-               (if edit
-                 "Cancel"
-                 "Edit contact"))
+     (d/div {:class '[mb-2 flex justify-between]}
+            (d/button {:class '[bg-teal-500 py-1 px-4 rounded text-white]
+                       :on-click #(set-edit (not edit))}
+                      (if edit
+                        "Cancel"
+                        "Edit Contact"))
+            (d/button {:class '[bg-teal-500 py-1 px-4 rounded text-white]
+                       :on-click #(new-contact)}
+                      "New contact"))
      (if edit
        ($ contact-edit {:contact selected})
        ($ contact-display {:contact selected})))))

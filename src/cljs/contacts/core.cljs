@@ -28,7 +28,7 @@
              :value (hooks/use-reducer app-reducer initial-state)}
             ($ app)))
 
-(defn ^:export init []
+(defn ^:export ^:dev/after-load init []
   (dom/render
    ($ provided-app)
    (js/document.getElementById "app")))
