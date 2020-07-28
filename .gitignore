@@ -26,3 +26,4 @@ node_modules
 resources/public/js
 resources/public/css
 .clj-kondo/.cache
+.calva

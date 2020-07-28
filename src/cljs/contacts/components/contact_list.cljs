@@ -8,7 +8,8 @@
 
 (defnc contact-list-item [{:keys [contact]}]
   (let [[_ actions] (use-app-state)
-        set-selected (:select actions)]
+        set-selected (:select actions)
+        remove-contact (:remove-contact actions)]
     (d/li {:class '[mb-2]}
           (d/div {:class '[flex justify-between]}
                  (d/span
@@ -21,8 +22,8 @@
                             "Select")
                   (d/button {:class '[bg-red-500 py-1 px-4 ml-2 rounded text-white focus focus:bg-red-300]
                              :on-click #(DELETE (str api-host "/contacts/" (:id contact))
-                                          {:handler (fn [response]
-                                                      (prn response))})}
+                                          {:handler (fn [_]
+                                                      (remove-contact (:id contact)))})}
                             "Delete"))))))
 
 (defnc contact-list []

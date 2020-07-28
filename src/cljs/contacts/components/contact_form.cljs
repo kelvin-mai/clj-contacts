@@ -36,7 +36,8 @@
 (defnc contact-edit [{:keys [contact]}]
   (let [[state set-state] (hooks/use-state contact)
         [app-state actions] (use-app-state)
-        selected (:selected app-state)]
+        selected (:selected app-state)
+        {:keys [add-contact update-contact]} actions]
     (d/form {:on-submit (fn [e]
                           (.preventDefault e)
                           (if selected
@@ -47,7 +48,7 @@
                                           :email email}
                                  :format :json
                                  :handler (fn [response]
-                                            (js/console.log response))}))
+                                            (update-contact (:contact response)))}))
                             (POST (str api-host "/contacts")
                               (let [{:keys [first_name last_name email]} state]
                                 {:params {:first-name first_name
@@ -55,7 +56,7 @@
                                           :email email}
                                  :format :json
                                  :handler (fn [response]
-                                            (js/console.log response))}))))}
+                                            (add-contact response))}))))}
             (map-indexed
              (fn [i v]
                ($ contact-edit-item {:label v
@@ -78,9 +79,10 @@
         selected (:selected state)
         new-contact (:new-contact actions)]
     (hooks/use-effect
-     [selected edit]
-     (when (not selected)
-       (set-edit true)))
+     [selected]
+     (if (not selected)
+       (set-edit true)
+       (set-edit false)))
     (d/div
      (d/div {:class '[mb-2 flex justify-between]}
             (d/button {:class '[bg-teal-500 py-1 px-4 rounded text-white]
