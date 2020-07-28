@@ -1,10 +1,12 @@
 (ns contacts.components.contact-form
-  (:require [helix.core :refer [defnc $ <>]]
+  (:require [ajax.core :refer [PUT POST]]
+            [helix.core :refer [defnc $ <>]]
             [helix.dom :as d]
             [helix.hooks :as hooks]
             [contacts.state :refer [use-app-state]]
             [contacts.utils :refer [make-label-str
-                                    contact-form-fields]]))
+                                    contact-form-fields
+                                    api-host]]))
 
 (defnc contact-display-item [{:keys [label value]}]
   (d/p
@@ -32,9 +34,28 @@
              :on-change on-change})))
 
 (defnc contact-edit [{:keys [contact]}]
-  (let [[state set-state] (hooks/use-state contact)]
+  (let [[state set-state] (hooks/use-state contact)
+        [app-state actions] (use-app-state)
+        selected (:selected app-state)]
     (d/form {:on-submit (fn [e]
-                          (.preventDefault e))}
+                          (.preventDefault e)
+                          (if selected
+                            (PUT (str api-host "/contacts/" (:id selected))
+                              (let [{:keys [first_name last_name email]} state]
+                                {:params {:first-name first_name
+                                          :last-name last_name
+                                          :email email}
+                                 :format :json
+                                 :handler (fn [response]
+                                            (js/console.log response))}))
+                            (POST (str api-host "/contacts")
+                              (let [{:keys [first_name last_name email]} state]
+                                {:params {:first-name first_name
+                                          :last-name last_name
+                                          :email email}
+                                 :format :json
+                                 :handler (fn [response]
+                                            (js/console.log response))}))))}
             (map-indexed
              (fn [i v]
                ($ contact-edit-item {:label v
@@ -56,16 +77,21 @@
         [state actions] (use-app-state)
         selected (:selected state)
         new-contact (:new-contact actions)]
+    (hooks/use-effect
+     [selected edit]
+     (when (not selected)
+       (set-edit true)))
     (d/div
      (d/div {:class '[mb-2 flex justify-between]}
             (d/button {:class '[bg-teal-500 py-1 px-4 rounded text-white]
-                       :on-click #(set-edit (not edit))}
-                      (if edit
-                        "Cancel"
-                        "Edit Contact"))
-            (d/button {:class '[bg-teal-500 py-1 px-4 rounded text-white]
                        :on-click #(new-contact)}
-                      "New contact"))
+                      "New contact")
+            (when selected
+              (d/button {:class '[bg-teal-500 py-1 px-4 rounded text-white]
+                         :on-click #(set-edit (not edit))}
+                        (if edit
+                          "Cancel"
+                          "Edit Contact"))))
      (if edit
        ($ contact-edit {:contact selected})
        ($ contact-display {:contact selected})))))

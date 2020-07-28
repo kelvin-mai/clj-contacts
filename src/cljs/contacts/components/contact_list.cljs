@@ -1,7 +1,9 @@
 (ns contacts.components.contact-list
-  (:require [helix.core :refer [defnc $ <>]]
+  (:require [ajax.core :refer [DELETE]]
+            [helix.core :refer [defnc $ <>]]
             [helix.dom :as d]
             [contacts.state :refer [use-app-state]]
+            [contacts.utils :refer [api-host]]
             [contacts.components.icons :refer [user-icon]]))
 
 (defnc contact-list-item [{:keys [contact]}]
@@ -13,9 +15,15 @@
                   ($ user-icon)
                   (d/span {:class '[pl-2]}
                           (str (:first_name contact) " " (:last_name contact))))
-                 (d/button {:class '[bg-teal-500 py-1 px-4 rounded text-white focus:bg-teal-300]
-                            :on-click #(set-selected contact)}
-                           "Select")))))
+                 (d/div
+                  (d/button {:class '[bg-teal-500 py-1 px-4 rounded text-white focus:bg-teal-300]
+                             :on-click #(set-selected contact)}
+                            "Select")
+                  (d/button {:class '[bg-red-500 py-1 px-4 ml-2 rounded text-white focus focus:bg-red-300]
+                             :on-click #(DELETE (str api-host "/contacts/" (:id contact))
+                                          {:handler (fn [response]
+                                                      (prn response))})}
+                            "Delete"))))))
 
 (defnc contact-list []
   (let [[state _] (use-app-state)

@@ -5,6 +5,7 @@
             [helix.hooks :as hooks]
             ["react-dom" :as dom]
             [contacts.state :refer [app-state app-reducer initial-state use-app-state]]
+            [contacts.utils :refer [api-host]]
             [contacts.components.nav :refer [nav]]
             [contacts.components.contact-form :refer [contact-form]]
             [contacts.components.contact-list :refer [contact-list]]))
@@ -13,7 +14,7 @@
   (let [[state actions] (use-app-state)]
     (hooks/use-effect
      :once
-     (GET "http://localhost:4000/api/contacts"
+     (GET (str api-host "/contacts")
        {:handler (:init actions)}))
     (if (:contacts state)
       (<>

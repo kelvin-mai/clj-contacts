@@ -9,3 +9,6 @@
            (replace "_" " ")
            capitalize)
        ": "))
+
+(def api-host
+  "http://localhost:4000/api")
